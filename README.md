@@ -3,3 +3,5 @@ This repository holds applications that use different similarity modelling appro
 
 # Interesting Sources
 https://towardsdatascience.com/slam-dunk-video-classification-tensorflow-2-0-a6d4809f9663
+
+https://mc.ai/action-recognition-and-video-classification-using-keras-and-tensorflow/
