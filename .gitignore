@@ -130,3 +130,5 @@ dmypy.json
 
 /videos
 /images
+/ground_truth/Muppets-02-01-01/*.png
+!/ground_truth/Muppets-02-01-01/Muppets-02-01-01.txt
