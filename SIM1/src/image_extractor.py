@@ -6,7 +6,6 @@ def extract_ground_truth_images(ground_truth_textfile, video_path, image_path):
     cap = cv2.VideoCapture(video_path)
     Path(image_path).mkdir(parents=True, exist_ok=True)
 
-    i = 0
     with open(ground_truth_textfile, 'r') as f:
         for line in f:
             entries = line.split(', ')
@@ -19,9 +18,6 @@ def extract_ground_truth_images(ground_truth_textfile, video_path, image_path):
             filename = image_path + '/' + str(entries[0]) + '_' + \
                        '_'.join([str(label).rstrip() for label in entries[1:]]) + '.png'
             cv2.imwrite(filename, frame)
-            if i == 200:
-                break
-            i += 1
 
 
 if __name__ == '__main__':
