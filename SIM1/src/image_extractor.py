@@ -12,7 +12,7 @@ def extract_ground_truth_images(ground_truth_textfile, video_path, image_path):
             cap.set(cv2.CAP_PROP_POS_FRAMES, int(entries[0]))
             ret, frame = cap.read()
             if not ret:
-                print('Failed to read frame %d of video %r.', frame_id, movie_path)
+                print('Failed to read frame %d of video %r.', entries[0], movie_path)
                 exit(1)
 
             filename = image_path + '/' + str(entries[0]) + '_' + \
