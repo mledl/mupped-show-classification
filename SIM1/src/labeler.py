@@ -115,8 +115,8 @@ def labelize_data(movie_path, output_path, image_path, step_size=1):
 
 
 if __name__ == '__main__':
-    test_movie_path = '../../videos/Muppets-02-01-01.avi'
-    test_ouput_path = '../../ground_truth/labeled/Muppets-02-01-01.txt'
+    test_movie_path = '../../videos/Muppets-03-04-03.avi'
+    test_ouput_path = '../../ground_truth/labeled/Muppets-03-04-03.txt'
     test_image_path = '../../ground_truth/labeled/'
     step = 12
     labelize_data(movie_path=test_movie_path, output_path=test_ouput_path, image_path=test_image_path, step_size=step)
