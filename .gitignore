@@ -131,9 +131,11 @@ dmypy.json
 /videos
 /images
 /audio
-/ground_truth/Muppets-02-01-01/*.png
-/ground_truth/Muppets-02-04-04/*.png
-/ground_truth/Muppets-03-04-03/*.png
+/ground_truth/Muppets-02-01-01/*.jpg
+/ground_truth/Muppets-02-04-04/*.jpg
+/ground_truth/Muppets-03-04-03/*.jpg
+/ground_truth/kermit/*.jpg
 !/ground_truth/Muppets-02-01-01/Muppets-02-01-01.txt
 !/ground_truth/Muppets-02-04-04/Muppets-02-04-04.txt
 !/ground_truth/Muppets-03-04-03/Muppets-03-04-03.txt
+!/ground_truth/kermit/labels.txt
