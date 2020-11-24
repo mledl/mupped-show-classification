@@ -16,7 +16,7 @@ def extract_ground_truth_images(ground_truth_textfile, video_path, image_path):
                 exit(1)
 
             filename = image_path + '/' + str(entries[0]) + '_' + \
-                       '_'.join([str(label).rstrip() for label in entries[1:]]) + '.png'
+                       '_'.join([str(label).rstrip() for label in entries[1:]]) + '.jpg'
             cv2.imwrite(filename, frame)
 
 

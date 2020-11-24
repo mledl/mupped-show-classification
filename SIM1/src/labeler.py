@@ -50,7 +50,7 @@ def labelize_data(movie_path, output_path, image_path, step_size=1):
         exit(1)
     if 'n' in label_key.lower():
         output_file.write(str(frame_id) + ', 4\n')
-        cv2.imwrite(image_filename + '_4' + '.png', cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+        cv2.imwrite(image_filename + '_4' + '.jpg', cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
     if 'k' in label_key.lower():
         output_line = output_line + ', 0'
         image_filename = image_filename + '_0'
@@ -66,7 +66,7 @@ def labelize_data(movie_path, output_path, image_path, step_size=1):
 
     if 'n' not in label_key.lower():
         output_file.write(output_line + '\n')
-        cv2.imwrite(image_filename + '.png', cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+        cv2.imwrite(image_filename + '.jpg', cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
 
     while True:
         try:
@@ -88,7 +88,7 @@ def labelize_data(movie_path, output_path, image_path, step_size=1):
                 break
             if 'n' in label_key.lower():
                 output_file.write(str(frame_id) + ', 4\n')
-                cv2.imwrite(image_filename + '_4' + '.png', cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+                cv2.imwrite(image_filename + '_4' + '.jpg', cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
                 i = i + step_size
                 continue
             if 'k' in label_key.lower():
@@ -105,7 +105,7 @@ def labelize_data(movie_path, output_path, image_path, step_size=1):
                 image_filename = image_filename + '_3'
 
             output_file.write(output_line + '\n')
-            cv2.imwrite(image_filename + '.png', cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+            cv2.imwrite(image_filename + '.jpg', cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
             i = i + step_size
         except KeyboardInterrupt:
             break
