@@ -59,7 +59,7 @@ def screentime_per_class(ground_truth_textfile, class_label):
     return intervals
 
 
-def slice_audio_from_video(ground_truth_textfile, audio_path, audio_base_path, video_fps):
+def slice_audio_from_video(ground_truth_textfile, audio_path, audio_base_path, video_fps, file_id):
     screen_time_map = extract_character_screentime(ground_truth_textfile)
     audio = AudioSegment.from_wav(audio_path)
 
@@ -70,12 +70,7 @@ def slice_audio_from_video(ground_truth_textfile, audio_path, audio_base_path, v
             start = (float(interval[0]) / video_fps) * 1000
             end = (float(interval[1]) / video_fps) * 1000
             audio_chunk = audio[start:end]
-            # if key == 4:
-            #     none_chunks = split_on_silence(audio_chunk, min_silence_len=1000, silence_thresh=-16)
-            #     for j, none_chunk in enumerate(none_chunks):
-            #         none_chunk.export(audio_base_path + '4_' + str(j) + '.wav', format='wav')
-            # else:
-            audio_chunk.export(audio_base_path + str(key) + '_' + str(i) + '.wav', format='wav')
+            audio_chunk.export(audio_base_path + str(file_id) + '_' + str(key) + '_' + str(i) + '.wav', format='wav')
         print('[INFO] Finished slicing for label: %d' % key)
 
 
@@ -97,5 +92,5 @@ if __name__ == '__main__':
 
     for i in range(0, len(audio_paths)):
         slice_audio_from_video(ground_truth_textfile=ground_truth_textfiles[i], audio_path=audio_paths[i],
-                               audio_base_path=test_audio_base_path, video_fps=fps)
+                               audio_base_path=test_audio_base_path, video_fps=fps, file_id=i + 1)
         os.remove(audio_paths[i])
