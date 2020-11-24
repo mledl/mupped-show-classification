@@ -2,7 +2,6 @@ from moviepy.editor import *
 import os
 from pathlib import Path
 from pydub import AudioSegment
-from pydub.silence import split_on_silence
 
 character_map = {0: 'kermit_the_frog',
                  1: 'waldorf_and_statler',
@@ -81,14 +80,22 @@ def slice_audio_from_video(ground_truth_textfile, audio_path, audio_base_path, v
 
 
 if __name__ == '__main__':
-    test_video_path = '../../videos/Muppets-02-01-01.avi'
+    video_paths = ['../../videos/Muppets-02-01-01.avi', '../../videos/Muppets-02-04-04.avi',
+                   '../../videos/Muppets-03-04-03.avi']
     test_audio_base_path = '../../audio/'
-    test_audio_path = test_audio_base_path + 'Muppets-02-01-01.wav'
-    test_ground_truth_textfile = '../../ground_truth/Muppets-02-01-01/Muppets-02-01-01.txt'
+    audio_paths = [test_audio_base_path + 'Muppets-02-01-01.wav', test_audio_base_path + 'Muppets-02-04-04.wav',
+                   test_audio_base_path + 'Muppets-03-04-03.wav']
+    ground_truth_textfiles = ['../../ground_truth/Muppets-02-01-01/Muppets-02-01-01.txt',
+                              '../../ground_truth/Muppets-02-04-04/Muppets-02-04-04.txt',
+                              '../../ground_truth/Muppets-03-04-03/Muppets-03-04-03.txt']
     fps = 25
 
     Path(test_audio_base_path).mkdir(parents=True, exist_ok=True)
-    extract_audio_from_video(video_path=test_video_path, audio_base_path=test_audio_base_path)
-    slice_audio_from_video(ground_truth_textfile=test_ground_truth_textfile, audio_path=test_audio_path,
-                           audio_base_path=test_audio_base_path, video_fps=fps)
-    # os.remove(test_audio_path)
+
+    for path in video_paths:
+        extract_audio_from_video(video_path=path, audio_base_path=test_audio_base_path)
+
+    for i in range(0, len(audio_paths)):
+        slice_audio_from_video(ground_truth_textfile=ground_truth_textfiles[i], audio_path=audio_paths[i],
+                               audio_base_path=test_audio_base_path, video_fps=fps)
+        os.remove(audio_paths[i])
