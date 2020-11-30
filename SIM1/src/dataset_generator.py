@@ -1,6 +1,9 @@
 import math
 import random
 import cv2
+import glob
+import librosa
+import os
 from pathlib import Path
 
 character_map = {0: 'kermit_the_frog',
@@ -15,6 +18,11 @@ file_map = {'Muppets-02-01-01.txt': 1,
 
 video_base_path = '../../videos/'
 ground_truth_files_base_path = '../../ground_truth/'
+audio_snippet_path = '../../audio/'
+mfcc_feature_file = '../../ground_truth/audio/mfcc.txt'
+ground_truth_txt_files = ['../../ground_truth/Muppets-02-01-01/Muppets-02-01-01.txt',
+                          '../../ground_truth/Muppets-02-04-04/Muppets-02-04-04.txt',
+                          '../../ground_truth/Muppets-03-04-03/Muppets-03-04-03.txt']
 
 
 def print_ground_truth_statistics(data_locations_dict):
@@ -150,11 +158,112 @@ def parse_ground_truth_txt_files(ground_truth_files):
     return parsed_ground_truth
 
 
-if __name__ == '__main__':
-    ground_truth_txt_files = ['../../ground_truth/Muppets-02-01-01/Muppets-02-01-01.txt',
-                              '../../ground_truth/Muppets-02-04-04/Muppets-02-04-04.txt',
-                              '../../ground_truth/Muppets-03-04-03/Muppets-03-04-03.txt']
+def create_mfcc_audio_dataset(audio_path, frame_length_ms, n_mfcc, output_file):
+    Path('../../ground_truth/audio/').mkdir(parents=True, exist_ok=True)
 
+    # extract counts for snippets with and without given character
+    total_no_audios = len(glob.glob(audio_path + '*.wav'))
+    print('Total number of audio snippets: %d' % total_no_audios)
+    print('Window size: %d ms' % frame_length_ms)
+    print('Number of MFCC features: %d' % n_mfcc)
+    print('Extracting MFCC features for audio data...')
+
+    # define fft window and sliding window factors based on given frame length
+    mfcc_n_fft_factor = frame_length_ms / 1000  # window factor
+    mfcc_hop_length_factor = mfcc_n_fft_factor * 0.5  # sliding window factor, note that this must be an int
+
+    # extract MFCC features for all audio files
+    mfcc_audio_data = {}
+    for audio_file in glob.glob(audio_path + '*.wav'):
+        # extract file id and character id
+        filename = audio_file.split('/')[-1]
+        file_char_id = filename.split('_')[0][-1] + '_' + filename.split('_')[1]
+
+        raw_data, sample_rate = librosa.load(audio_file)
+        mfccs = librosa.feature.mfcc(y=raw_data, sr=sample_rate, n_mfcc=n_mfcc,
+                                     hop_length=int(mfcc_hop_length_factor * sample_rate),
+                                     n_fft=int(mfcc_n_fft_factor * sample_rate)).T
+
+        try:
+            mfcc_audio_data[file_char_id].append(mfccs)
+        except KeyError:
+            mfcc_audio_data[file_char_id] = [mfccs]
+
+    # write calculated MFCCs to file
+    print('Write extracted MFCCs to file: %s' % output_file)
+    with open(output_file, 'w') as f:
+        for key, values in mfcc_audio_data.items():
+            file_id = key.split('_')[0]
+            char_id = key.split('_')[1]
+            for mfcc_array in values:
+                for mfcc_values in mfcc_array:
+                    list_as_string = ','.join([str(mfcc_values[i]) for i in range(0, mfcc_array.shape[1])])
+                    f.write('%s, %s, %s\n' % (file_id, char_id, list_as_string))
+
+
+def random_sample_mfcc(target_character_id, mfcc_file):
+    # read the mfcc features from file
+    print('Read MFCC features for random sampling...')
+    mfcc_data_all = {0: {}, 1: {}, 2: {}, 3: {}, 4: {}}
+    total_number_of_samples = 0
+    no_positive_samples = 0
+    with open(mfcc_file, 'r') as f:
+        for i, line in enumerate(f):
+            parts = line.split(',')
+            file_id = int(parts[0].strip())
+            char_id = int(parts[1].strip())
+            mfcc_coeffs = [float(parts[i].strip()) for i in range(2, len(parts))]
+
+            if char_id == target_character_id:
+                no_positive_samples += 1
+
+            try:
+                mfcc_data_all[char_id][file_id].append(mfcc_coeffs)
+            except KeyError:
+                mfcc_data_all[char_id][file_id] = [mfcc_coeffs]
+            total_number_of_samples += 1
+
+    # exract the number of sample present for target character
+    print('Number of samples for target class %d: %d' % (target_character_id, no_positive_samples))
+
+    # calculate data distribution
+    print('Create data distribution map...')
+    data_distribution_map = {0: {}, 1: {}, 2: {}, 3: {}, 4: {}}
+    no_rest_samples = total_number_of_samples - no_positive_samples
+    for char_id, value in mfcc_data_all.items():
+        if char_id != target_character_id:
+            for file_id, mfccs in value.items():
+                data_distribution_map[char_id][file_id] = math.ceil(
+                    (len(mfccs) / no_rest_samples) * no_positive_samples)
+
+    # add positive samples to resulting dataset
+    dataset = []
+    for char_id, value in mfcc_data_all.items():
+        if char_id == target_character_id:
+            for file_id, mfccs in value.items():
+                dataset += [(target_character_id, mfcc) for mfcc in mfccs]
+
+    # randomly sample the negative samples according to data distribution
+    random.seed(333)
+    for char_id, value in data_distribution_map.items():
+        for file_id, k in value.items():
+            dataset += random.sample(mfcc_data_all[char_id][file_id], k)
+
+    print('Successfully extracted MFCC feature dataset for character: %d' % target_character_id)
+
+    return dataset
+
+
+def get_waldorf_statler_mfcc_features(audio_path, frame_length_ms, n_mfcc, mfcc_file):
+    # if mfcc data has not been extracted, call the extraction
+    if len(os.listdir('../../ground_truth/audio/')) == 0:
+        create_mfcc_audio_dataset(audio_path, frame_length_ms, n_mfcc, mfcc_file)
+
+    return random_sample_mfcc(1, mfcc_file)
+
+
+def create_kermit_image_dataset():
+    # extract kermit image dataset
     ground_truth_locations = parse_ground_truth_txt_files(ground_truth_txt_files)
     print_ground_truth_statistics(ground_truth_locations)
     create_image_dataset_for_character(0, ground_truth_locations)
