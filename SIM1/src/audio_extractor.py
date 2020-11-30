@@ -74,7 +74,7 @@ def slice_audio_from_video(ground_truth_textfile, audio_path, audio_base_path, v
         print('[INFO] Finished slicing for label: %d' % key)
 
 
-if __name__ == '__main__':
+def extract_audio_snippets():
     video_paths = ['../../videos/Muppets-02-01-01.avi', '../../videos/Muppets-02-04-04.avi',
                    '../../videos/Muppets-03-04-03.avi']
     test_audio_base_path = '../../audio/'

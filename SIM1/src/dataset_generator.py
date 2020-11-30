@@ -5,6 +5,7 @@ import glob
 import librosa
 import os
 from pathlib import Path
+from audio_extractor import extract_audio_snippets
 
 character_map = {0: 'kermit_the_frog',
                  1: 'waldorf_and_statler',
@@ -254,6 +255,10 @@ def random_sample_mfcc(target_character_id, mfcc_file):
 
 def get_waldorf_statler_mfcc_features(frame_length_ms, n_mfcc):
     Path('../../ground_truth/audio/').mkdir(parents=True, exist_ok=True)
+
+    # check if audio snippets have alerady been extracted
+    if len(os.listdir('../../audio/')) == 0:
+        extract_audio_snippets()
 
     # if mfcc data has not been extracted, call the extraction
     if len(os.listdir('../../ground_truth/audio/')) == 0:
