@@ -270,3 +270,9 @@ def create_kermit_image_dataset():
         ground_truth_locations = parse_ground_truth_txt_files(ground_truth_txt_files)
         print_ground_truth_statistics(ground_truth_locations)
         create_image_dataset_for_character(0, ground_truth_locations, 'kermit/')
+    else:
+        print('Kermit image dataset already created.')
+
+
+if __name__ == '__main__':
+    create_kermit_image_dataset()
