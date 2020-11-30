@@ -239,40 +239,36 @@ def random_sample_mfcc(target_character_id, mfcc_file):
     for char_id, value in mfcc_data_all.items():
         if char_id == target_character_id:
             for file_id, mfccs in value.items():
-                dataset += [(target_character_id, mfcc) for mfcc in mfccs]
+                dataset += [(1, file_id, mfcc) for mfcc in mfccs]
 
     # randomly sample the negative samples according to data distribution
     random.seed(333)
     for char_id, value in data_distribution_map.items():
         for file_id, k in value.items():
-            dataset += random.sample(mfcc_data_all[char_id][file_id], k)
+            dataset += [(0, file_id, mfcc) for mfcc in random.sample(mfcc_data_all[char_id][file_id], k)]
 
     print('Successfully extracted MFCC feature dataset for character: %d' % target_character_id)
 
     return dataset
 
 
-def get_waldorf_statler_mfcc_features(audio_path, frame_length_ms, n_mfcc, mfcc_file):
+def get_waldorf_statler_mfcc_features(frame_length_ms, n_mfcc):
     Path('../../ground_truth/audio/').mkdir(parents=True, exist_ok=True)
 
     # if mfcc data has not been extracted, call the extraction
     if len(os.listdir('../../ground_truth/audio/')) == 0:
-        create_mfcc_audio_dataset(audio_path, frame_length_ms, n_mfcc, mfcc_file)
+        create_mfcc_audio_dataset(audio_snippet_path, frame_length_ms, n_mfcc, mfcc_feature_file)
 
-    return random_sample_mfcc(1, mfcc_file)
+    return random_sample_mfcc(1, mfcc_feature_file)
 
 
 def create_kermit_image_dataset():
     Path('../../ground_truth/kermit/').mkdir(parents=True, exist_ok=True)
 
-    # extract kermit image dataset
+    # extract kermit image dataset if not already created
     if len(os.listdir('../../ground_truth/kermit/')) == 0:
         ground_truth_locations = parse_ground_truth_txt_files(ground_truth_txt_files)
         print_ground_truth_statistics(ground_truth_locations)
         create_image_dataset_for_character(0, ground_truth_locations, 'kermit/')
     else:
         print('Kermit image dataset already created.')
-
-
-if __name__ == '__main__':
-    create_kermit_image_dataset()
