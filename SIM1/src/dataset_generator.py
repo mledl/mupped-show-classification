@@ -88,7 +88,7 @@ def extract_ground_truth(character_location_map, rest_location_map, character_id
     labels_file.close()
 
 
-def create_image_dataset_for_character(character_id, data_locations_dict):
+def create_image_dataset_for_character(character_id, data_locations_dict, sub_path):
     """
     The aim of this method is to generate a dataset for the specified character that consists of
     50% images labeled with the specified character and 50% randomly sampled of all others
@@ -131,7 +131,7 @@ def create_image_dataset_for_character(character_id, data_locations_dict):
         rest_frameid_map[key] = temp
 
     extract_ground_truth(character_location_map, rest_frameid_map, character_id,
-                         ground_truth_files_base_path + 'kermit/')
+                         ground_truth_files_base_path + sub_path)
 
 
 def parse_ground_truth_txt_files(ground_truth_files):
@@ -159,8 +159,6 @@ def parse_ground_truth_txt_files(ground_truth_files):
 
 
 def create_mfcc_audio_dataset(audio_path, frame_length_ms, n_mfcc, output_file):
-    Path('../../ground_truth/audio/').mkdir(parents=True, exist_ok=True)
-
     # extract counts for snippets with and without given character
     total_no_audios = len(glob.glob(audio_path + '*.wav'))
     print('Total number of audio snippets: %d' % total_no_audios)
@@ -255,6 +253,8 @@ def random_sample_mfcc(target_character_id, mfcc_file):
 
 
 def get_waldorf_statler_mfcc_features(audio_path, frame_length_ms, n_mfcc, mfcc_file):
+    Path('../../ground_truth/audio/').mkdir(parents=True, exist_ok=True)
+
     # if mfcc data has not been extracted, call the extraction
     if len(os.listdir('../../ground_truth/audio/')) == 0:
         create_mfcc_audio_dataset(audio_path, frame_length_ms, n_mfcc, mfcc_file)
@@ -263,7 +263,10 @@ def get_waldorf_statler_mfcc_features(audio_path, frame_length_ms, n_mfcc, mfcc_
 
 
 def create_kermit_image_dataset():
+    Path('../../ground_truth/kermit/').mkdir(parents=True, exist_ok=True)
+
     # extract kermit image dataset
-    ground_truth_locations = parse_ground_truth_txt_files(ground_truth_txt_files)
-    print_ground_truth_statistics(ground_truth_locations)
-    create_image_dataset_for_character(0, ground_truth_locations)
+    if len(os.listdir('../../ground_truth/kermit/')) == 0:
+        ground_truth_locations = parse_ground_truth_txt_files(ground_truth_txt_files)
+        print_ground_truth_statistics(ground_truth_locations)
+        create_image_dataset_for_character(0, ground_truth_locations, 'kermit/')
