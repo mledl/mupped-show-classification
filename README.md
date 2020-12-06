@@ -28,3 +28,19 @@ image_extractor.py: Provides utils for extacting images from videos.
 dataset_generator.py: Provides functionality for extracting the datasets for the specific prediction tasks. Those functionalities
 are used by the jupyter notebooks.
 
+# SIM 2 models
+
+Due to the long amount of time required to train the CNN models, we have uploaded the trained models to owncloud[https://owncloud.tuwien.ac.at/index.php/s/ZgPcnRf8MOk8dFk](https://owncloud.tuwien.ac.at/index.php/s/ZgPcnRf8MOk8dFk)
+
+## model1
+
+* VGG16
+* 256x256x3 inputs
+* The initial weights are based on the imagenet dataset (1000 classes)
+* Later layers were cut off and replaced by a fully connected layer and a sigmoid output
+* 92% accuracy, 90% precision, 94% recall on the test set
+* we changed the test set sampling during training -> requires retraining to get representative validation results
+* Trained with SGD, learning rate 0.02
+* Trained for approximately 15 epochs
+* Surprisingly performs well even on incorrectly-labeled frames
+
