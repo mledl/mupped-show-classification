@@ -42,5 +42,6 @@ Due to the long amount of time required to train the CNN models, we have uploade
 * we changed the test set sampling during training -> requires retraining to get representative validation results
 * Trained with SGD, learning rate 0.02
 * Trained for approximately 15 epochs
-* Surprisingly performs well even on incorrectly-labeled frames
+* 64-image batches used for training
+* Surprisingly performs well on incorrectly-labeled frames
 
