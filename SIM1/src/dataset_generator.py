@@ -257,7 +257,7 @@ def get_waldorf_statler_mfcc_features(frame_length_ms, n_mfcc):
     Path('../../ground_truth/audio/').mkdir(parents=True, exist_ok=True)
 
     # check if audio snippets have alerady been extracted
-    if len(os.listdir('../../audio/')) == 0:
+    if len(os.listdir('../../audio')) == 0:
         extract_audio_snippets()
 
     # if mfcc data has not been extracted, call the extraction
