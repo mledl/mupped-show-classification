@@ -287,7 +287,7 @@ def create_pig_image_dataset():
         print_ground_truth_statistics(ground_truth_locations)
         create_image_dataset_for_character(2, ground_truth_locations, 'pig/')
     else:
-        print('Kermit image dataset already created.')
+        print('Pigs image dataset already created.')
 
 def create_swedish_chef_image_dataset():
     Path('../../ground_truth/swedish_chef/').mkdir(parents=True, exist_ok=True)
@@ -298,4 +298,4 @@ def create_swedish_chef_image_dataset():
         print_ground_truth_statistics(ground_truth_locations)
         create_image_dataset_for_character(3, ground_truth_locations, 'swedish_chef/')
     else:
-        print('Kermit image dataset already created.')
+        print('Swedish Chef image dataset already created.')
