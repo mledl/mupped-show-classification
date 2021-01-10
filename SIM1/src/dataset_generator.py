@@ -129,6 +129,13 @@ def create_image_dataset_for_character(character_id, data_locations_dict, sub_pa
         temp = {}
         for k, v in values.items():
             temp[k] = random.sample(data_locations_dict[k][key], v)
+            # check if sample is not a positive sample, if so replace it
+            for idx, value in enumerate(temp[k]):
+                if value in data_locations_dict[k][character_id]:
+                    tmp_fnr = random.sample(data_locations_dict[k][key], 1)[0]
+                    while tmp_fnr in data_locations_dict[k][character_id] or tmp_fnr in temp[k]:
+                        tmp_fnr = random.sample(data_locations_dict[k][key], 1)[0]
+                    temp[k][idx] = tmp_fnr
         rest_frameid_map[key] = temp
 
     extract_ground_truth(character_location_map, rest_frameid_map, character_id,
@@ -278,6 +285,7 @@ def create_kermit_image_dataset():
     else:
         print('Kermit image dataset already created.')
 
+
 def create_pig_image_dataset():
     Path('../../ground_truth/pig/').mkdir(parents=True, exist_ok=True)
 
@@ -289,6 +297,7 @@ def create_pig_image_dataset():
     else:
         print('Pigs image dataset already created.')
 
+
 def create_swedish_chef_image_dataset():
     Path('../../ground_truth/swedish_chef/').mkdir(parents=True, exist_ok=True)
 
@@ -299,3 +308,7 @@ def create_swedish_chef_image_dataset():
         create_image_dataset_for_character(3, ground_truth_locations, 'swedish_chef/')
     else:
         print('Swedish Chef image dataset already created.')
+
+
+if __name__ == '__main__':
+    create_pig_image_dataset()
