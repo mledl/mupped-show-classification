@@ -259,6 +259,74 @@ def random_sample_mfcc(target_character_id, mfcc_file):
 
     return dataset
 
+def chunks(l, n):
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
+
+def random_sample_multi_mfcc(target_character_id, mfcc_file, audio_path, frame_length_ms, n_mfcc, mfcc_sequence_len):
+    # extract counts for snippets with and without given character
+    total_no_audios = len(glob.glob(audio_path + '*.wav'))
+    print('Total number of audio snippets: %d' % total_no_audios)
+    print('Window size: %d ms' % frame_length_ms)
+    print('Number of MFCC features: %d' % n_mfcc)
+    print('Extracting MFCC features for audio data...')
+
+    # define fft window and sliding window factors based on given frame length
+    mfcc_n_fft_factor = frame_length_ms / 1000  # window factor
+    mfcc_hop_length_factor = mfcc_n_fft_factor * 0.5  # sliding window factor, note that this must be an int
+
+    total_number_of_samples = 0
+    # extract MFCC features for all audio files
+    mfcc_audio_data = {}
+    for audio_file in glob.glob(audio_path + '*.wav'):
+        # extract file id and character id
+        filename = audio_file.split('/')[-1]
+        #file_char_id = filename.split('_')[0][-1] + '_' + filename.split('_')[1]
+        character_id = int(filename.split('_')[1])
+
+        raw_data, sample_rate = librosa.load(audio_file)
+        mfccs = librosa.feature.mfcc(y=raw_data, sr=sample_rate, n_mfcc=n_mfcc,
+                                     hop_length=int(mfcc_hop_length_factor * sample_rate),
+                                     n_fft=int(mfcc_n_fft_factor * sample_rate)).T
+
+        for mfcc_sequence in chunks(mfccs, mfcc_sequence_len):
+            total_number_of_samples += 1
+            try:
+                mfcc_audio_data[character_id].append(mfcc_sequence)
+            except KeyError:
+                mfcc_audio_data[character_id] = [mfcc_sequence]
+
+    no_positive_samples = len(mfcc_audio_data[target_character_id])
+
+    # exract the number of sample present for target character
+    print('Number of samples for target class %d: %d' % (target_character_id, no_positive_samples))
+
+    # calculate data distribution
+    print('Create data distribution map...')
+    data_distribution_map = {}
+    no_rest_samples = total_number_of_samples - no_positive_samples
+    for char_id, mfccs in mfcc_audio_data.items():
+        if char_id != target_character_id:
+                data_distribution_map[char_id] = math.ceil(
+                    (len(mfccs) / no_rest_samples) * no_positive_samples)
+
+    # add positive samples to resulting dataset
+    dataset = []
+    for char_id, value in mfcc_audio_data.items():
+        if char_id == target_character_id:
+            for mfccs in value:
+                dataset.append([1, mfccs])
+
+    print(data_distribution_map)
+    # randomly sample the negative samples according to data distribution
+    random.seed(333)
+    for char_id, k in data_distribution_map.items():
+        dataset.extend([[0, mfcc] for mfcc in random.sample(mfcc_audio_data[char_id], k)])
+
+    print('Successfully extracted MFCC feature dataset for character: %d' % target_character_id)
+
+    return dataset
+
 
 def get_waldorf_statler_mfcc_features(frame_length_ms, n_mfcc):
     Path('../../ground_truth/audio/').mkdir(parents=True, exist_ok=True)
@@ -273,6 +341,27 @@ def get_waldorf_statler_mfcc_features(frame_length_ms, n_mfcc):
 
     return random_sample_mfcc(1, mfcc_feature_file)
 
+def get_swedish_chef_mfcc_features(frame_length_ms, n_mfcc):
+    Path('../../ground_truth/audio/').mkdir(parents=True, exist_ok=True)
+
+    # check if audio snippets have alerady been extracted
+    if len(os.listdir('../../audio')) == 0:
+        extract_audio_snippets()
+
+    # if mfcc data has not been extracted, call the extraction
+    if len(os.listdir('../../ground_truth/audio/')) == 0:
+        create_mfcc_audio_dataset(audio_snippet_path, frame_length_ms, n_mfcc, mfcc_feature_file)
+
+    return random_sample_mfcc(3, mfcc_feature_file)
+
+def get_swedish_chef_multi_mfcc_features(frame_length_ms, n_mfcc, seq_len):
+    Path('../../ground_truth/audio/').mkdir(parents=True, exist_ok=True)
+
+    # check if audio snippets have alerady been extracted
+    if len(os.listdir('../../audio')) == 0:
+        extract_audio_snippets()
+
+    return random_sample_multi_mfcc(3, mfcc_feature_file, audio_snippet_path, frame_length_ms, n_mfcc, seq_len)
 
 def create_kermit_image_dataset():
     Path('../../ground_truth/kermit/').mkdir(parents=True, exist_ok=True)
@@ -311,4 +400,7 @@ def create_swedish_chef_image_dataset():
 
 
 if __name__ == '__main__':
-    create_pig_image_dataset()
+    #create_pig_image_dataset()
+
+    data = get_swedish_chef_multi_mfcc_features(20, 20, 50)
+    #print(data)
