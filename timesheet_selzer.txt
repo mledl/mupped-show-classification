@@ -1,0 +1,13 @@
+7.10. 14:00-23:00 watched lectures 1,2,3, wrote abstracts
+21.10. 10:00-19:30 watched lectures 4,5,6, wrote abstracts
+22.10. 11:00-17:20 watched lectures 7,8, wrote abstracts
+6.11. 10:30-13:00 worked on data import for SIM1
+30.11. 18:00-20:00 SIM2
+5.12. 14:00-22:00 worked on CNN model
+6.12. 9:30-15:00 add checkpoints and more
+6.12. 17:00-00:30 fix softmax bug, CNN
+7.12. 11:00-22:00 CNN, visualization
+10.1. 10:00-12:00 change train test validate split
+12.1. 14:00-23:00 add GRU classifier
+13.1. 16:00-24:00 improve GRU classifier
+14.1. 15:00-17:30 documentation, cleanup
