@@ -34,6 +34,8 @@ Due to the long amount of time required to train the CNN models, we have uploade
 
 ## pig-model-1
 
+A CNN based on VGG16 for pig classification (~96% accuracy on the eval set).
+
 ## rnn-model
 
-
+An RNN based on GRU layers for detecting the swedish chef in audio. It achieves 85% accuracy on the test set and 76% accuracy on the eval set. The approach was limited by the amount of ddata we had for the swedish chef, however the model could be trained quite effectively and we believe it could achieve good results if more data was available.
