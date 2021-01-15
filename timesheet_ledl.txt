@@ -1,0 +1,31 @@
+01.10.2020, 21-00h, Watched lecture on Setting and wrote abstract
+03.10.2020, 21-00h, Watched lecture on Similarity Measurement and wrote abstract
+06.10.2020, 8:45-12h, Watched lecture on Feature Engineering and wrote abstract
+07.10.2020, 9:15-13:15h, Watched lecture on Classification and wrote abstract
+19.10.2020, 20:40-22:40h, Watched lecture on Evaluation and wrote abstract
+20.10.2020, 20-00h, Watched lecture on Perception and Psychophysics and wrote abstract
+21.10.2020, 20-00h, Watched lecture on Spectra Features and wrote abstract
+22.10.2020, 08:30-11h, Watched lecture on Semantic Modelling and wrote abstract
+03.11.2020, 20:00-22:00h, Frame extraction from video
+04.11.2020, 20:00-23:30h, Implemented semi-automatic labeler
+05.11.2020, 22:00-23:00h, Implement color histogram
+06.11.2020, 15:15-17:15h, Labeled Episode Muppets-02-01-01
+07.11.2020, 20:00-23:00h, First classifiers for kermit and read audio from video
+08.11.2020, 09:00-10:00h, Generate prediction output
+08.11.2020, 20:00-23:00h, Generate prediction outputs
+09.11.2020, 15:00-17:00h, Generate evaluation output
+09.11.2020, 20:00-22:30h, Added audio extractor/slicer script
+23.11.2020, 11:00-13:00h, Labeled Episode Muppets-03-04-03
+23.11.2020, 16:00-19:00h, Implemented image dataset generator
+24.11.2020, 14:00-17:00h, Adjusted kermit image model to handle extracted dataset and do some code restructuring
+24.11.2020, 20:00-23:00h, Audio Slicing and cleaning of slices belonging to waldorf and statler
+30.11.2020, 11:00-15:00h, Create and store MFCC feature database with random sampling
+12.12.2020, 08:00-12:00h, Implement HOG feature extraction with SVM classifier
+12.12.2020, 13:00-15:00h, Experimented with SVM hyperparameter tuning
+28.12.2020, 13:00-16:00h, Implemented ROC curve creation for tensorflow CNNs
+29.12.2020, 09:00-11:00h, Adapt train/test/validation split logic of SIM1
+29.12.2020, 13:00-18:00h, Add and experiment with further shallow classifiers.
+04.01.2020, 09:00-13:00h, Fix issues in dataset creation when images have multiple labels.
+08.01.2020, 08:00-11:00h, Wrote markdown documentation for SIM1
+08.01.2020, 14:00-16:00h, Wrote markdown documentation for SIM1
+09.01.2020, 13:00-15:00h, Implement (debug) output for analyzing CNN classification
