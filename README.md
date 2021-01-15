@@ -5,7 +5,9 @@ This repository holds applications that use different similarity modelling appro
 Martin Ledl, 01634019
 Alexander Selzer, 01633655
 
+
 # Introduction & Instructions
+**Note: This Readme aims for given a short overview of the structure. More detailed information and documentation is provided in the corresponding notebooks - SIM/src/SIM1.ipynb and SIM/src/SIM2.ipynb **
 The solutions for the respective courses SIM1 and SIM2 can be found under SIM/src/SIM1.ipynb and SIM/src/SIM2.ipynb. For SIM1 we
 decided to go with feature engineering in combination with shallow classifier and we are going to tackle SIM2 with Neural Networks
 (CNNs and RNNs). For this first attempts we tried to go with the recommendations from the lectures. Therefore, we were going for
